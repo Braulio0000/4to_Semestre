@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>ChatBot de Amor para Alexia</title>
+  <style>
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff0f6;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+    }
+    .msg { margin:10px 0; }
+    .me { text-align: right; }
+    .me .bubble { background: #ff4d94; color:white; }
+    .bot .bubble { background: #ffe6f0; color:#333; }
+    .bubble {
+      display:inline-block;
+      padding: 10px 14px;
+      border-radius: 14px;
+      max-width: 75%;
+      white-space: pre-line;
+      word-wrap: break-word;
+    }
+    .controls {
+      display:flex;
+      gap:10px;
+      padding:10px;
+      border-top: 1px solid #ccc;
+      background:#fff;
+    }
+    input {
+      flex:1;
+      padding:10px;
+      border:1px solid #ccc;
+      border-radius:8px;
+      font-size:16px;
+    }
+    button {
+      padding:10px 15px;
+      border:none;
+      border-radius:8px;
+      background:#ff4d94;
+      color:white;
+      cursor:pointer;
+      font-size:16px;
+    }
+    img {
+      max-width:200px;
+      border-radius: 12px;
+      margin-top:5px;
+      display:block;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat" id="chat"></div>
+  <div class="controls">
+    <input id="userInput" type="text" placeholder="Escríbele algo a Alexia..." onkeydown="if(event.key==='Enter') sendMsg()">
+    <button onclick="sendMsg()">Enviar</button>
+  </div>
+
+<script>
+const chat = document.getElementById("chat");
+const input = document.getElementById("userInput");
+
+let memoria = JSON.parse(localStorage.getItem("amor_memoria")||"[]");
+
+function appendMsg(text, who="bot", img=null){
+  const div = document.createElement("div");
+  div.className = "msg "+who;
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+  bubble.textContent = text;
+  div.appendChild(bubble);
+  if(img){
+    const pic = document.createElement("img");
+    pic.src = img;
+    div.appendChild(pic);
+  }
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function sendMsg(){
+  const text = input.value.trim();
+  if(!text) return;
+  appendMsg(text,"me");
+  input.value = "";
+  setTimeout(()=> reply(text),400);
+}
+
+function reply(text){
+  let respuestas = [];
+  let imgs = [];
+
+  // Amor eterno
+  if(/hola/i.test(text)) respuestas.push("Hola mi vida Alexia 💖, eres el amor de mi vida. 🌹✨");
+  if(/me amas/i.test(text)) { respuestas.push("Te amo infinitamente, mi amochito 💕💘"); imgs.push("https://i.imgur.com/j5v5bHn.png"); }
+  if(/apodo/i.test(text)) respuestas.push("Mis apodos favoritos para ti 💕: amochito, cielito, fresas con crema 🍓🥛, mi esposa posa posa, mi niña prechocha, mi pelirrojita hermosa, mi angelito 😇.");
+
+  // Fechas importantes
+  if(/aniversario/i.test(text)) respuestas.push("Nuestros aniversarios son cada día 05 🥰💍.");
+  if(/primera cita/i.test(text)) { respuestas.push("Nuestra primera cita fue en el Acuario Michin 🐠💘 (23/11/2024)"); imgs.push("https://i.imgur.com/N8HcXru.png"); }
+  if(/primera vez/i.test(text)) respuestas.push("La primera vez que nos vimos fue el 20/11/2024 en CUCEI ✨.");
+  if(/primer dia hablamos/i.test(text)) respuestas.push("Empezamos a hablar el 3/11/2024 💌.");
+
+  // Frases tuyas con emojis
+  if(/paps/i.test(text)) respuestas.push("Que paps 😎🔥");
+  if(/gato/i.test(text)) respuestas.push("Que gato we 🐱💖");
+  if(/chiqui/i.test(text)) respuestas.push("Que pasa chiqui 😘💕");
+  if(/tiamo/i.test(text)) respuestas.push("¡Tiamo! 💕💕💕");
+  if(/me encantas/i.test(text)) { respuestas.push("Me encantas demasiado, mi vida prechocha 💖✨"); imgs.push("https://i.imgur.com/vT0wHEu.png"); }
+  if(/ovular/i.test(text)) respuestas.push("Me pones a ovular 😳🥵❤️");
+  if(/embarazado/i.test(text)) respuestas.push("JAJA estoy embarazado 🤰😂");
+  if(/preciosa/i.test(text)) respuestas.push("Estás preciosa 😍 eres mi todito 💘.");
+
+  // Recordar algo
+  if(/recordar[:]?/i.test(text)){
+    let val = text.replace(/recordar[:]?/i,"").trim();
+    if(val){
+      memoria.push({texto:val,ts:new Date().toISOString()});
+      localStorage.setItem("amor_memoria",JSON.stringify(memoria));
+      respuestas.push(`Lo guardaré en mi corazón ❤️: "${val}"`);
+    } else {
+      respuestas.push("Dime qué quieres que recuerde 💌.");
+    }
+  }
+  if(/memoria/i.test(text)){
+    if(memoria.length===0) respuestas.push("Aún no tengo recuerdos guardados 💭.");
+    else respuestas.push("Nuestros recuerdos 💖:\n" + memoria.map((m,i)=>`${i+1}. ${m.texto}`).join("\n"));
+  }
+
+  // Por defecto si no encontró nada
+  if(respuestas.length===0) respuestas.push("Mi amor Alexia 💕, te amo mucho mucho mucho 💖💞.");
+
+  // Mostrar todas las respuestas juntas
+  appendMsg(respuestas.join("\n\n"), "bot", imgs[0]||null);
+}
+
+// Mensaje de bienvenida
+appendMsg("Hola Alexia 💖, soy el bot de tu amor. Pregúntame algo o escríbeme.");
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+Código 
+import numpy as np
+import matplotlib.pyplot as plt
+
+# --- Parámetros del algoritmo ---
+num_particles = 30
+num_dimensions = 2
+max_iter = 100
+w = 0.7
+c1 = 1.5
+c2 = 1.5
+
+# --- Función objetivo ---
+def sphere(x):
+    return np.sum(x**2)
+
+# --- Inicialización ---
+X = np.random.uniform(-5, 5, (num_particles, num_dimensions))
+V = np.random.uniform(-1, 1, (num_particles, num_dimensions))
+
+pbest = X.copy()
+pbest_value = np.array([sphere(x) for x in X])
+gbest = X[np.argmin(pbest_value)]
+gbest_value = min(pbest_value)
+
+# --- Ciclo principal ---
+history = []
+
+for t in range(max_iter):
+    for i in range(num_particles):
+        r1, r2 = np.random.rand(), np.random.rand()
+
+        # Actualizar velocidad
+        V[i] = (w * V[i]
+                + c1 * r1 * (pbest[i] - X[i])
+                + c2 * r2 * (gbest - X[i]))
+
+        # Actualizar posición
+        X[i] = X[i] + V[i]
+
+        # Evaluar nueva posición
+        f = sphere(X[i])
+
+        # Actualizar mejor valor personal
+        if f < pbest_value[i]:
+            pbest[i], pbest_value[i] = X[i], f
+
+    # Actualizar mejor global
+    gbest = pbest[np.argmin(pbest_value)]
+    gbest_value = min(pbest_value)
+    history.append(gbest_value)
+
+# --- Resultados ---
+print("Mejor solución encontrada:", gbest)
+print("Valor de la función:", gbest_value)
+
+# --- Gráfica de convergencia ---
+plt.plot(history)
+plt.title("Convergencia del algoritmo PSO")
+plt.xlabel("Iteraciones")
+plt.ylabel("Valor mínimo encontrado")
+plt.grid(True)
+plt.show()
