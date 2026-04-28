@@ -1,6 +1,6 @@
 # 4to_Semestre
 En este repositorio agregare todo el material realizado en mi cuarto semestre de ingenieria.
-Estructura de Datos
+# Estructura de Datos
 1. Modificar código de lista
 Cambiar la implementación a memoria dinámica.
 2. Modificación de tipo de dato
@@ -15,7 +15,8 @@ Selection Sort (Ordenamiento por selección): Busca el elemento más pequeño de
 *Insertion Sort (Ordenamiento por inserción): Construye la lista final ordenada de un elemento a la vez. Toma cada elemento de la parte desordenada y lo inserta exactamente en su posición correcta dentro de la parte que ya ha procesado.
 *Quick Sort (Ordenamiento rápido): Selecciona un elemento de la lista llamado "pivote" y divide los demás elementos en dos sublistas: los menores que el pivote y los mayores. Luego, ordena las sublistas de forma recursiva.
 
-Fundamentos de Inteligencia Artificial
+# Fundamentos de Inteligencia Artificial
+
 Tarea 1: Crear un chat bot.
 Práctica 1-1: Implementar un simulador que determine la medida de rendimiento para el entorno de una aspiradora. La implementación debe ser modular de manera que los sensores, actuadores y las características del entorno puedan ser modificadas.
 Práctica 1-2: Implementar un agente reactivo simple para el entorno de la aspiradora. El agente debe trabajar con el simulador del ejercicio 1, debe recibir la información inicial de las posiciones y suciedad en el ambiente. También debe ser capaz de almacenar la puntuación del agente en base a su desempeño para cada configuración y la configuración media global.
